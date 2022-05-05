@@ -1,4 +1,4 @@
-FROM bitwalker/alpine-elixir-phoenix:1.12
+FROM bitwalker/alpine-elixir-phoenix:1.13
 
 RUN apk --no-cache --update add alpine-sdk gmp-dev automake libtool inotify-tools autoconf python3 file
 
@@ -24,6 +24,10 @@ EXPOSE 4000
 ENV MIX_ENV="prod"
 ENV SOCKET_ROOT="/rsk/mainnet"
 ENV CHAIN_ID="30"
+ENV COIN_NAME="RBTC"
+ENV NETWORK_PATH="/rsk/mainnet"
+ENV SUBNETWORK="RSK"
+ENV JSON_RPC="https://public-node.rsk.co"
 
 # Cache elixir deps
 ADD mix.exs mix.lock ./
@@ -37,7 +41,11 @@ RUN mix do deps.get, local.rebar --force, deps.compile
 ADD . .
 
 ARG COIN
-RUN if [ "$COIN" != "" ]; then sed -i s/"POA"/"${COIN}"/g apps/block_scout_web/priv/gettext/en/LC_MESSAGES/default.po; fi
+RUN if [ "$COIN" != "" ]; then \
+        sed -i s/"POA"/"${COIN}"/g apps/block_scout_web/priv/gettext/en/LC_MESSAGES/default.po; \
+        sed -i "/msgid \"Ether\"/{n;s/msgstr \"\"/msgstr \"${COIN}\"/g}" apps/block_scout_web/priv/gettext/default.pot; \
+        sed -i "/msgid \"Ether\"/{n;s/msgstr \"\"/msgstr \"${COIN}\"/g}" apps/block_scout_web/priv/gettext/en/LC_MESSAGES/default.po; \
+    fi
 
 # Run forderground build and phoenix digest
 RUN mix compile
