@@ -7,6 +7,7 @@
 - [#6073](https://github.com/blockscout/blockscout/pull/6073) - Add vyper support for rust verifier microservice integration
 - [#6111](https://github.com/blockscout/blockscout/pull/6111) - Add Prometheus metrics to indexer
 - [#6168](https://github.com/blockscout/blockscout/pull/6168) - Token instance fetcher checks instance owner and updates current token balance
+- [#6190](https://github.com/blockscout/blockscout/pull/6190) - Add EIP-1559 support to gas price oracle
 
 ### Fixes
 
