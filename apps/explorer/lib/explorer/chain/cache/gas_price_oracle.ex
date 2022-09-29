@@ -10,6 +10,8 @@ defmodule Explorer.Chain.Cache.GasPriceOracle do
       from: 2
     ]
 
+  alias EthereumJSONRPC.Blocks
+
   alias Explorer.Chain.{
     Block,
     Wei
@@ -44,7 +46,7 @@ defmodule Explorer.Chain.Cache.GasPriceOracle do
     key: :gas_prices,
     key: :async_task,
     global_ttl: cache_period(),
-    ttl_check_interval: :timer.minutes(5),
+    ttl_check_interval: cache_period(),
     callback: &async_task_on_deletion(&1)
 
   def get_average_gas_price(num_of_blocks, safelow_percentile, average_percentile, fast_percentile) do
@@ -57,7 +59,7 @@ defmodule Explorer.Chain.Cache.GasPriceOracle do
         where: transaction.gas_price > ^0,
         group_by: block.number,
         order_by: [desc: block.number],
-        select: min(transaction.gas_price),
+        select: {min(transaction.gas_price), min(transaction.max_priority_fee_per_gas)},
         limit: ^num_of_blocks
       )
 
@@ -67,11 +69,39 @@ defmodule Explorer.Chain.Cache.GasPriceOracle do
 
     latest_ordered_gas_prices =
       latest_gas_prices
-      |> Enum.map(fn %Wei{value: gas_price} -> Decimal.to_integer(gas_price) end)
+      |> Enum.map(fn {%Wei{value: gas_price}, _} -> Decimal.to_integer(gas_price) end)
 
-    safelow_gas_price = gas_price_percentile_to_gwei(latest_ordered_gas_prices, safelow_percentile)
-    average_gas_price = gas_price_percentile_to_gwei(latest_ordered_gas_prices, average_percentile)
-    fast_gas_price = gas_price_percentile_to_gwei(latest_ordered_gas_prices, fast_percentile)
+    json_rpc_named_arguments = Application.get_env(:explorer, :json_rpc_named_arguments)
+
+    {safelow_gas_price, average_gas_price, fast_gas_price} =
+      case EthereumJSONRPC.fetch_blocks_by_tag("pending", json_rpc_named_arguments) do
+        {:ok, %Blocks{blocks_params: [%{base_fee_per_gas: base_fee}]}} when is_integer(base_fee) ->
+          base_fee_float = %Wei{value: Decimal.new(base_fee)} |> Wei.to(:gwei) |> Decimal.to_float()
+
+          latest_priority_fees =
+            latest_gas_prices
+            |> Enum.map(fn
+              {%Wei{value: gas_price}, nil} -> max(Decimal.to_integer(gas_price) - base_fee, 0)
+              {_, %Wei{value: priority_fee}} -> Decimal.to_integer(priority_fee)
+            end)
+
+          safelow_priority_gas_price = gas_price_percentile_to_gwei(latest_priority_fees, safelow_percentile)
+          average_priority_gas_price = gas_price_percentile_to_gwei(latest_priority_fees, average_percentile)
+          fast_priority_gas_price = gas_price_percentile_to_gwei(latest_priority_fees, fast_percentile)
+
+          if not is_nil(safelow_priority_gas_price) and not is_nil(average_priority_gas_price) and
+               not is_nil(fast_priority_gas_price) do
+            {safelow_priority_gas_price + base_fee_float, average_priority_gas_price + base_fee_float,
+             average_priority_gas_price + base_fee_float}
+          else
+            {safelow_priority_gas_price, average_priority_gas_price, average_priority_gas_price}
+          end
+
+        _ ->
+          {gas_price_percentile_to_gwei(latest_ordered_gas_prices, safelow_percentile),
+           gas_price_percentile_to_gwei(latest_ordered_gas_prices, average_percentile),
+           gas_price_percentile_to_gwei(latest_ordered_gas_prices, fast_percentile)}
+      end
 
     gas_prices = %{
       "slow" => safelow_gas_price,
