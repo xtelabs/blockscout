@@ -207,7 +207,7 @@
 
         const inputOffset = log.stack.peek(2 + stackOffset).valueOf();
         const inputLength = log.stack.peek(3 + stackOffset).valueOf();
-        const inputEnd = Math.min(inputOffset + inputLength, log.memory.length());
+        const inputEnd = inputOffset + inputLength;
 
         const call = {
             type: 'call',
