@@ -2,6 +2,11 @@
 
 ### Features
 
+- [#6433](https://github.com/blockscout/blockscout/pull/6433) - Update error pagess
+- [#6544](https://github.com/blockscout/blockscout/pull/6544) - API improvements
+- [#5561](https://github.com/blockscout/blockscout/pull/5561), [#6523](https://github.com/blockscout/blockscout/pull/6523), [#6549](https://github.com/blockscout/blockscout/pull/6549) - Improve working with contracts implementations
+- [#6401](https://github.com/blockscout/blockscout/pull/6401) - Add Sol2Uml contract visualization
+- [#6481](https://github.com/blockscout/blockscout/pull/6481) - Smart contract verification improvements
 - [#6444](https://github.com/blockscout/blockscout/pull/6444) - Add support for yul verification via rust microservice
 - [#6440](https://github.com/blockscout/blockscout/pull/6440) - Add support for base64 encoded NFT metadata
 - [#6407](https://github.com/blockscout/blockscout/pull/6407) - Indexed ratio for int txs fetching stage
@@ -22,12 +27,18 @@
 - [#6450](https://github.com/blockscout/blockscout/pull/6450) - INDEXER_INTERNAL_TRANSACTIONS_BATCH_SIZE and INDEXER_INTERNAL_TRANSACTIONS_CONCURRENCY env variables
 - [#6454](https://github.com/blockscout/blockscout/pull/6454) - INDEXER_RECEIPTS_BATCH_SIZE, INDEXER_RECEIPTS_CONCURRENCY, INDEXER_COIN_BALANCES_BATCH_SIZE, INDEXER_COIN_BALANCES_CONCURRENCY env variables
 - [#6476](https://github.com/blockscout/blockscout/pull/6476), [#6484](https://github.com/blockscout/blockscout/pull/6484) - Update token balances indexes
+- [#6510](https://github.com/blockscout/blockscout/pull/6510) - Set consensus: false for blocks on int transaction foreign_key_violation
+- [#6565](https://github.com/blockscout/blockscout/pull/6565) - Set restart: :permanent for permanent fetchers
+- [#6568](https://github.com/blockscout/blockscout/pull/6568) - Drop unfetched_token_balances index
 
 ### Fixes
 
+- [#6512](https://github.com/blockscout/blockscout/pull/6512) - Allow gasUsed in failed internal txs; Leave error field for staticcall
+- [#6532](https://github.com/blockscout/blockscout/pull/6532) - Fix index creation migration
+- [#6473](https://github.com/blockscout/blockscout/pull/6473) - Fix state changes for contract creation transactions
 - [#6475](https://github.com/blockscout/blockscout/pull/6475) - Fix token name with unicode graphemes shortening
 - [#6420](https://github.com/blockscout/blockscout/pull/6420) - Fix address logs search
-- [#6390](https://github.com/blockscout/blockscout/pull/6390) - Fix transactions responses in API v2
+- [#6390](https://github.com/blockscout/blockscout/pull/6390), [#6502](https://github.com/blockscout/blockscout/pull/6502), [#6511](https://github.com/blockscout/blockscout/pull/6511) - Fix transactions responses in API v2
 - [#6357](https://github.com/blockscout/blockscout/pull/6357), [#6409](https://github.com/blockscout/blockscout/pull/6409), [#6428](https://github.com/blockscout/blockscout/pull/6428) - Fix definitions of NETWORK_PATH, API_PATH, SOCKET_ROOT: process trailing slash
 - [#6338](https://github.com/blockscout/blockscout/pull/6338) - Fix token search with space
 - [#6329](https://github.com/blockscout/blockscout/pull/6329) - Prevent logger from truncating response from rust verifier service in case of an error
@@ -48,6 +59,8 @@
 - [#6327](https://github.com/blockscout/blockscout/pull/6327) - Fix and refactor address logs page and search
 - [#6449](https://github.com/blockscout/blockscout/pull/6449) - Search min_missing_block_number from zero
 - [#6492](https://github.com/blockscout/blockscout/pull/6492) - Remove token instance owner fetching
+- [#6536](https://github.com/blockscout/blockscout/pull/6536) - Fix internal transactions query
+- [#6550](https://github.com/blockscout/blockscout/pull/6550) - Query token transfers before updating
 
 ### Chore
 
