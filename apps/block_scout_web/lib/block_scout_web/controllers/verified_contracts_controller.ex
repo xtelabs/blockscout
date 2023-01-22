@@ -63,6 +63,10 @@ defmodule BlockScoutWeb.VerifiedContractsController do
     [filter: :vyper]
   end
 
+  defp current_filter(%{"filter" => "yul"}) do
+    [filter: :yul]
+  end
+
   defp current_filter(_), do: []
 
   defp search_query(%{"search" => ""}), do: []
