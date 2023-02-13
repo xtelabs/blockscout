@@ -5,16 +5,22 @@
 ### Features
 
 - [#6838](https://github.com/blockscout/blockscout/pull/6838) - Disable dark mode env var
+- [#6843](https://github.com/blockscout/blockscout/pull/6843) - Add env variable to hide Add to MM button
 - [#6744](https://github.com/blockscout/blockscout/pull/6744) - API v2: smart contracts verification
 - [#6763](https://github.com/blockscout/blockscout/pull/6763) - Permanent UI dark mode
 - [#6721](https://github.com/blockscout/blockscout/pull/6721) - Implement fetching internal transactions from callTracer
 - [#6541](https://github.com/blockscout/blockscout/pull/6541) - Integrate sig provider
 - [#6712](https://github.com/blockscout/blockscout/pull/6712), [#6798](https://github.com/blockscout/blockscout/pull/6798) - API v2 update
 - [#6582](https://github.com/blockscout/blockscout/pull/6582) - Transaction actions indexer
+- [#6863](https://github.com/blockscout/blockscout/pull/6863) - Move OnDemand fetchers from indexer supervisor
 
 ### Fixes
 
+- [#6864](https://github.com/blockscout/blockscout/pull/6864) - Fix pool checker in tx actions fetcher
 - [#6859](https://github.com/blockscout/blockscout/pull/6859) - Fix task restart in transaction actions fetcher
+- [#6860](https://github.com/blockscout/blockscout/pull/6860) - JSON RPC to CSP header
+- [#6859](https://github.com/blockscout/blockscout/pull/6859) - Fix task restart in transaction actions fetcher
+- [#6840](https://github.com/blockscout/blockscout/pull/6840) - Fix realtime block fetcher
 - [#6831](https://github.com/blockscout/blockscout/pull/6831) - Copy of [#6028](https://github.com/blockscout/blockscout/pull/6028)
 - [#6832](https://github.com/blockscout/blockscout/pull/6832) - Transaction actions fix
 - [#6827](https://github.com/blockscout/blockscout/pull/6827) - Fix handling unknown calls from `callTracer`
