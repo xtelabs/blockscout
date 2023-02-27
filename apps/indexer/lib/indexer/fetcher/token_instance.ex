@@ -122,7 +122,6 @@ defmodule Indexer.Fetcher.TokenInstance do
       flush_interval: :timer.seconds(3),
       max_concurrency: Application.get_env(:indexer, __MODULE__)[:concurrency] || @default_max_concurrency,
       max_batch_size: Application.get_env(:indexer, __MODULE__)[:batch_size] || @default_max_batch_size,
-      poll: true,
       task_supervisor: Indexer.Fetcher.TokenInstance.TaskSupervisor
     ]
   end
