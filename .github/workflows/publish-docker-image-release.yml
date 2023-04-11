@@ -18,7 +18,7 @@ jobs:
     name: Push Docker image to Docker Hub
     runs-on: ubuntu-latest
     env:
-      RELEASE_VERSION: 5.1.1
+      RELEASE_VERSION: 5.1.2
     steps:
       - name: Check out the repo
         uses: actions/checkout@v3
@@ -62,6 +62,8 @@ jobs:
             WOBSERVER_ENABLED=false
             ADMIN_PANEL_ENABLED=
             CACHE_ADDRESS_WITH_BALANCES_UPDATE_INTERVAL=
+            BLOCKSCOUT_VERSION=v{{ env.RELEASE_VERSION }}-beta
+            RELEASE_VERSION={{ env.RELEASE_VERSION }}
 
   merge-master-after-release:
     name: Merge 'master' to specific branch after release
