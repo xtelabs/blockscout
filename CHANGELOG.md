@@ -15,9 +15,11 @@
 - [#7276](https://github.com/blockscout/blockscout/pull/7276) - Convert 99+% of int txs indexing into 100% in order to hide top indexing banner
 - [#7282](https://github.com/blockscout/blockscout/pull/7282) - Add not found transaction error case
 - [#6778](https://github.com/blockscout/blockscout/pull/6778) - Fix deadlocks in block import stages
+- [#7305](https://github.com/blockscout/blockscout/pull/7305) - Reset MissingRangesCollector min_fetched_block_number
 
 ### Chore
 
+- [#7310](https://github.com/blockscout/blockscout/pull/7310) - Reducing resource consumption on bs-indexer-eth-goerli environment
 - [#7297](https://github.com/blockscout/blockscout/pull/7297) - Use tracing JSONRPC URL in case of debug_traceTransaction method
 - [#7292](https://github.com/blockscout/blockscout/pull/7292) - Allow Node 16+ version
 
