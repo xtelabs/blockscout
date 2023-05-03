@@ -21,7 +21,8 @@ defmodule Explorer.Chain.Import.Stage.BlockReferencing do
       Runner.TransactionActions,
       Runner.Withdrawals,
       Runner.ZkevmLifecycleTxns,
-      Runner.ZkevmTxnBatches
+      Runner.ZkevmTxnBatches,
+      Runner.ZkevmBatchTxns
     ]
 
   @impl Stage
