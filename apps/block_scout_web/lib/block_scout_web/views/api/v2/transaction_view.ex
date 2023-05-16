@@ -254,7 +254,7 @@ defmodule BlockScoutWeb.API.V2.TransactionView do
     decoded_input = transaction |> Transaction.decoded_input_data(!single_tx?, @api_true) |> format_decoded_input()
     decoded_input_data = decoded_input(decoded_input)
 
-    %{
+    result = %{
       "hash" => transaction.hash,
       "result" => status,
       "status" => transaction.status,
@@ -309,6 +309,18 @@ defmodule BlockScoutWeb.API.V2.TransactionView do
       "tx_tag" => GetTransactionTags.get_transaction_tags(transaction.hash, current_user(single_tx? && conn)),
       "has_error_in_internal_txs" => transaction.has_error_in_internal_txs
     }
+
+    result
+    |> add_optional_transaction_field(transaction, "zkevm_batch_number", :zkevm_batch, :number)
+    |> add_optional_transaction_field(transaction, "zkevm_sequence_hash", :zkevm_sequence_txn, :hash)
+    |> add_optional_transaction_field(transaction, "zkevm_verify_hash", :zkevm_verify_txn, :hash)
+  end
+
+  defp add_optional_transaction_field(result, transaction, field_name, assoc_name, assoc_field) do
+    case Map.get(transaction, assoc_name) do
+      nil -> result
+      item -> Map.put(result, field_name, Map.get(item, assoc_field))
+    end
   end
 
   def token_transfers(_, _conn, false), do: nil
