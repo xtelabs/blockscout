@@ -310,16 +310,31 @@ defmodule BlockScoutWeb.API.V2.TransactionView do
       "has_error_in_internal_txs" => transaction.has_error_in_internal_txs
     }
 
-    result
-    |> add_optional_transaction_field(transaction, "zkevm_batch_number", :zkevm_batch, :number)
-    |> add_optional_transaction_field(transaction, "zkevm_sequence_hash", :zkevm_sequence_txn, :hash)
-    |> add_optional_transaction_field(transaction, "zkevm_verify_hash", :zkevm_verify_txn, :hash)
+    extended_result =
+      result
+      |> add_optional_transaction_field(transaction, "zkevm_batch_number", :zkevm_batch, :number)
+      |> add_optional_transaction_field(transaction, "zkevm_sequence_hash", :zkevm_sequence_txn, :hash)
+      |> add_optional_transaction_field(transaction, "zkevm_verify_hash", :zkevm_verify_txn, :hash)
+
+    if is_nil(Map.get(extended_result, "zkevm_batch_number")) do
+      extended_result
+    else
+      Map.put(extended_result, "zkevm_status", zkevm_status(extended_result))
+    end
   end
 
   defp add_optional_transaction_field(result, transaction, field_name, assoc_name, assoc_field) do
     case Map.get(transaction, assoc_name) do
       nil -> result
       item -> Map.put(result, field_name, Map.get(item, assoc_field))
+    end
+  end
+
+  defp zkevm_status(result_map) do
+    if is_nil(Map.get(result_map, "zkevm_sequence_hash")) do
+      "Confirmed by Sequencer"
+    else
+      "L1 Confirmed"
     end
   end
 
