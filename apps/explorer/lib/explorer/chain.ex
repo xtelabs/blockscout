@@ -6893,4 +6893,26 @@ defmodule Explorer.Chain do
       batch -> {:ok, batch}
     end
   end
+
+  def zkevm_batches(options \\ []) do
+    paging_options = Keyword.get(options, :paging_options, @default_paging_options)
+    necessity_by_association = Keyword.get(options, :necessity_by_association, %{})
+
+    base_query =
+      from(tb in ZkevmTxnBatch,
+        order_by: [desc: tb.number]
+      )
+
+    base_query
+    |> join_associations(necessity_by_association)
+    |> page_zkevm_batches(paging_options)
+    |> limit(^paging_options.page_size)
+    |> select_repo(options).all()
+  end
+
+  defp page_zkevm_batches(query, %PagingOptions{key: nil}), do: query
+
+  defp page_zkevm_batches(query, %PagingOptions{key: {number}}) do
+    from(tb in query, where: tb.number < ^number)
+  end
 end
