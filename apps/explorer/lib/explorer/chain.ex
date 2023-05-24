@@ -6881,7 +6881,20 @@ defmodule Explorer.Chain do
     "withdrawals_count" |> get_last_fetched_counter(options) |> Decimal.add(1)
   end
 
-  def zkevm_batch(number, options \\ []) when is_list(options) do
+  def zkevm_batch(number, options \\ [])
+
+  def zkevm_batch(:latest, options) when is_list(options) do
+    ZkevmTxnBatch
+    |> order_by(desc: :number)
+    |> limit(1)
+    |> select_repo(options).one()
+    |> case do
+      nil -> {:error, :not_found}
+      batch -> {:ok, batch}
+    end
+  end
+
+  def zkevm_batch(number, options) when is_list(options) do
     necessity_by_association = Keyword.get(options, :necessity_by_association, %{})
 
     ZkevmTxnBatch
