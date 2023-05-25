@@ -63,6 +63,7 @@ defmodule Explorer.Chain do
     Transaction,
     Wei,
     Withdrawal,
+    ZkevmBatchTxn,
     ZkevmTxnBatch
   }
 
@@ -2199,7 +2200,7 @@ defmodule Explorer.Chain do
     |> where([transaction], transaction.hash in ^hashes)
     |> join_associations(necessity_by_association)
     |> preload([{:token_transfers, [:token, :from_address, :to_address]}])
-    |> Repo.all()
+    |> select_repo(options).all()
   end
 
   @doc """
@@ -6929,6 +6930,12 @@ defmodule Explorer.Chain do
         |> page_zkevm_batches(paging_options)
         |> limit(^paging_options.page_size)
       end
+
+    select_repo(options).all(query)
+  end
+
+  def zkevm_batch_transactions(batch_number, options \\ []) do
+    query = from(bts in ZkevmBatchTxn, where: bts.batch_number == ^batch_number)
 
     select_repo(options).all(query)
   end
