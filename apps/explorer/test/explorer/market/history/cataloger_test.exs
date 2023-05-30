@@ -5,7 +5,7 @@ defmodule Explorer.Market.History.CatalogerTest do
 
   alias Explorer.Market.MarketHistory
   alias Explorer.Market.History.Cataloger
-  alias Explorer.Market.History.Source.TestSource
+  alias Explorer.Market.History.Source.Price.TestSource
   alias Explorer.Repo
 
   setup do
@@ -25,7 +25,7 @@ defmodule Explorer.Market.History.CatalogerTest do
     state = %{}
 
     assert {:noreply, state} == Cataloger.handle_info({:fetch_history, 1}, state)
-    assert_receive {_ref, {1, 0, {:ok, ^records}}}
+    assert_receive {1, 0, {:ok, ^records}}
   end
 
   test "handle_info with successful task" do
@@ -33,7 +33,7 @@ defmodule Explorer.Market.History.CatalogerTest do
     record = %{date: ~D[2018-04-01], closing_price: Decimal.new(10), opening_price: Decimal.new(5)}
     state = %{}
 
-    assert {:noreply, state} == Cataloger.handle_info({nil, {1, 0, {:ok, [record]}}}, state)
+    assert {:noreply, state} == Cataloger.handle_info({1, 0, {:ok, [record]}}, state)
     assert_receive {:fetch_history, 1}
     assert Repo.get_by(MarketHistory, date: record.date)
   end

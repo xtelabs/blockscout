@@ -4,14 +4,14 @@
 
 ### Features
 
+- [#7585](https://github.com/blockscout/blockscout/pull/7585) - Store and display native coin market cap from the DB
 - [#7513](https://github.com/blockscout/blockscout/pull/7513) - Add Polygon Edge support
-
 - [#7532](https://github.com/blockscout/blockscout/pull/7532) - Handle empty id in json rpc responses
 - [#7544](https://github.com/blockscout/blockscout/pull/7544) - Add ERC-1155 signatures to uncataloged_token_transfer_block_numbers
 
 ### Fixes
 
-- [#7566](https://github.com/blockscout/blockscout/pull/7566) - Account: check composed email beofre sending
+- [#7566](https://github.com/blockscout/blockscout/pull/7566) - Account: check composed email before sending
 - [#7564](https://github.com/blockscout/blockscout/pull/7564) - Return contract type in address view
 - [#7562](https://github.com/blockscout/blockscout/pull/7562) - Remove fallback from Read methods
 - [#7537](https://github.com/blockscout/blockscout/pull/7537), [#7553](https://github.com/blockscout/blockscout/pull/7553) - Withdrawals fixes and improvements

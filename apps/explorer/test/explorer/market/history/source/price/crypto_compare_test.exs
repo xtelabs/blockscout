@@ -1,7 +1,7 @@
-defmodule Explorer.Market.History.Source.CryptoCompareTest do
+defmodule Explorer.Market.History.Source.Price.CryptoCompareTest do
   use ExUnit.Case, async: false
 
-  alias Explorer.Market.History.Source.CryptoCompare
+  alias Explorer.Market.History.Source.Price.CryptoCompare
   alias Plug.Conn
 
   @json """

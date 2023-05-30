@@ -44,7 +44,7 @@ defmodule Explorer.Market.History.Cataloger do
 
   @impl GenServer
   # Record fetch successful.
-  def handle_info({_ref, {_, _, {:ok, records}}}, state) do
+  def handle_info({_, _, {:ok, records}}, state) do
     Market.bulk_insert_history(records)
 
     # Schedule next check for history
@@ -56,7 +56,7 @@ defmodule Explorer.Market.History.Cataloger do
 
   # Failed to get records. Try again.
   @impl GenServer
-  def handle_info({_ref, {day_count, failed_attempts, :error}}, state) do
+  def handle_info({day_count, failed_attempts, :error}, state) do
     Logger.warn(fn -> "Failed to fetch market history. Trying again." end)
 
     fetch_history(day_count, failed_attempts + 1)
@@ -88,17 +88,59 @@ defmodule Explorer.Market.History.Cataloger do
     Application.get_env(:explorer, __MODULE__, [])[key] || default
   end
 
-  @spec source() :: module()
-  defp source do
-    config_or_default(:source, Explorer.Market.History.Source.CryptoCompare)
+  @spec source_price() :: module()
+  defp source_price do
+    config_or_default(:source_price, Explorer.Market.History.Source.Price.CryptoCompare)
   end
 
-  @spec fetch_history(non_neg_integer(), non_neg_integer()) :: Task.t()
+  @spec source_market_cap() :: module()
+  defp source_market_cap do
+    config_or_default(:source_market_cap, Explorer.Market.History.Source.MarketCap.CoinGecko)
+  end
+
+  @spec fetch_history(non_neg_integer(), non_neg_integer()) :: {non_neg_integer(), non_neg_integer(), {:ok, [any()]}}
   defp fetch_history(day_count, failed_attempts \\ 0) do
-    Task.Supervisor.async_nolink(Explorer.MarketTaskSupervisor, fn ->
-      Process.sleep(delay(failed_attempts))
-      {day_count, failed_attempts, source().fetch_history(day_count)}
-    end)
+    task_price =
+      Task.Supervisor.async_nolink(Explorer.MarketTaskSupervisor, fn ->
+        Process.sleep(delay(failed_attempts))
+        source_price().fetch_history(day_count)
+      end)
+
+    task_market_cap =
+      Task.Supervisor.async_nolink(Explorer.MarketTaskSupervisor, fn ->
+        Process.sleep(delay(failed_attempts))
+        source_market_cap().fetch_market_cap()
+      end)
+
+    tasks = [task_price, task_market_cap]
+
+    results =
+      case Task.await_many(tasks) do
+        [{:ok, results_price}, {:ok, results_market_cap}] ->
+          today_index =
+            Enum.find_index(results_price, fn price ->
+              price.date == results_market_cap.date
+            end)
+
+          today =
+            results_price
+            |> Enum.at(today_index)
+            |> Map.put(:market_cap, results_market_cap.market_cap)
+
+          results_price
+          |> List.replace_at(today_index, today)
+
+        [{:ok, results_price}, :error] ->
+          results_price
+
+        [:error, {:ok, results_market_cap}] ->
+          results_market_cap
+
+        _ ->
+          []
+      end
+
+    {day_count, failed_attempts, {:ok, results}}
   end
 
   @spec delay(non_neg_integer()) :: milliseconds()

@@ -1,6 +1,6 @@
-defmodule Explorer.Market.History.Source do
+defmodule Explorer.Market.History.Source.Price do
   @moduledoc """
-  Interface for a source that allows for fetching of market history.
+  Interface for a source that allows for fetching of coin price.
   """
 
   @typedoc """
