@@ -463,6 +463,7 @@
         "uncatalog",
         "unclosable",
         "unfetched",
+        "unfinalized",
         "Unitarion",
         "Unitorius",
         "Unitorus",
@@ -516,6 +517,7 @@
         "zindex",
         "zipcode",
         "zkbob",
+        "zkevm",
         "erts",
         "Asfpp",
         "Nerg"
