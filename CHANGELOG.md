@@ -4,6 +4,7 @@
 
 ### Features
 
+- [#7665](https://github.com/blockscout/blockscout/pull/7665) - Add standard-json vyper verification
 - [#7653](https://github.com/blockscout/blockscout/pull/7653) - Add support for DEPOSIT and WITHDRAW token transfer event in older contracts
 - [#7628](https://github.com/blockscout/blockscout/pull/7628) - Support partially verified property from verifier MS; Add property to track contracts automatically verified via eth-bytecode-db
 - [#7603](https://github.com/blockscout/blockscout/pull/7603) - Add Polygon Edge and optimism genesis files support
